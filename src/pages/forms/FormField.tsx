@@ -17,6 +17,7 @@ import {
   CardContent,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   IconButton,
   InputAdornment,
@@ -28,7 +29,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { FormikProps } from "formik";
+import { FormikProps, getIn } from "formik";
 
 export default function FormField(props: {
   formik: FormikProps<FormObject>;
@@ -38,7 +39,7 @@ export default function FormField(props: {
   onDelete: () => void;
 }) {
   const { formik, i } = props;
-  const { values, handleBlur, handleChange } = formik;
+  const { values, handleBlur, errors, touched, handleChange } = formik;
 
   function FieldType() {
     return (
@@ -89,6 +90,12 @@ export default function FormField(props: {
                     minWidth: "200PX",
                   }}
                 />
+                {getIn(errors, `data?.fields[${i}].title`) &&
+                  getIn(touched, `data?.fields[${i}].title`) && (
+                    <FormHelperText>
+                      {getIn(errors, `data?.fields[${i}].title`)}
+                    </FormHelperText>
+                  )}
               </FormControl>
 
               <FormControl fullWidth size="small">
