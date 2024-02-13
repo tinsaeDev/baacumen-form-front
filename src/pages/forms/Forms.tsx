@@ -21,7 +21,7 @@ export default function Forms() {
         action: "https://google.com/dd3",
         fields: [
           {
-            name: "",
+            
             type: "text",
             title: "",
             validation: {

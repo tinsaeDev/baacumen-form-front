@@ -13,7 +13,6 @@ type FormObject = {
 type FormField = {
   type: "text" | "number" | "textarea" | "checkbox" | "radio" | "date";
   title: string;
-  name: string;
 
   validation: {
     min?: number;
@@ -23,6 +22,5 @@ type FormField = {
   };
   options?: {
     label: string;
-    value: string;
   }[];
 };

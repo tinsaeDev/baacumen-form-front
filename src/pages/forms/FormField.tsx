@@ -61,7 +61,7 @@ export default function FormField(props: {
   }
   const type = values.data.fields[i].type;
   const title = values.data.fields[i].title;
-  const name = values.data.fields[i].name;
+
   return (
     <div
       style={{
@@ -99,17 +99,12 @@ export default function FormField(props: {
             <Stack mt={1}>
               {/* Text Field */}
               {type == "text" && (
-                <TextField label={title} size="small" name={name} disabled />
+                <TextField label={title} size="small" disabled />
               )}
 
               {/* Text Field */}
               {type == "number" && (
-                <TextField
-                  label={title}
-                  type="number"
-                  size="small"
-                  name={name}
-                />
+                <TextField label={title} type="number" size="small" />
               )}
 
               {/* Text Field */}
@@ -119,7 +114,6 @@ export default function FormField(props: {
                   rows={4}
                   label={title}
                   size="small"
-                  name={name}
                   disabled
                 />
               )}
@@ -130,7 +124,6 @@ export default function FormField(props: {
                   rows={4}
                   placeholder={title}
                   size="small"
-                  name={name}
                   type="date"
                 />
               )}
@@ -191,7 +184,6 @@ export default function FormField(props: {
                       onClick={() => {
                         values.data.fields[i].options?.push({
                           label: "Option",
-                          value: "",
                         });
 
                         formik.setFieldValue(`values.data`, values.data);
@@ -257,7 +249,6 @@ export default function FormField(props: {
                       onClick={() => {
                         values.data.fields[i].options?.push({
                           label: "Option",
-                          value: "",
                         });
 
                         formik.setFieldValue(`values.data`, values.data);

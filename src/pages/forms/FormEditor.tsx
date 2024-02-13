@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { Form, Formik } from "formik";
+import * as yup from "yup";
 import FormField from "./FormField";
 
 export default function FormEditor() {
@@ -26,7 +27,7 @@ export default function FormEditor() {
       fields: [
         {
           title: "What is your full name",
-          name: "full_name",
+
           type: "text",
           validation: {
             required: false,
@@ -42,6 +43,28 @@ export default function FormEditor() {
     <>
       <Formik
         initialValues={mockLoadedData}
+        validationSchema={yup.object().shape({
+          data: yup.object().shape({
+            fields: yup
+              .array()
+              .min(1)
+              .of(
+                yup.object().shape({
+                  title: yup.string().required(),
+                  type: yup.string().required(),
+                  validation: yup.object().shape({
+                    regex: yup.string(),
+                    required: yup.boolean().required(),
+                  }),
+                  options: yup.array().of(
+                    yup.object().shape({
+                      label: yup.string(),
+                    })
+                  ),
+                })
+              ),
+          }),
+        })}
         onSubmit={(values) => {
           console.log("VVVVVVVVVVV", values);
         }}
@@ -52,7 +75,6 @@ export default function FormEditor() {
           function onNewField(i: number) {
             {
               values.data.fields.splice(i + 1, 0, {
-                name: "",
                 title: "",
                 type: "text",
                 validation: {
