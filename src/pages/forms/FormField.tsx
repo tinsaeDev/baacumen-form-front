@@ -292,73 +292,75 @@ export default function FormField(props: {
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={1}>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={1}
-              >
-                {values.data.fields[i].validation.required}
-                <FormControl fullWidth>
-                  <FormControlLabel
-                    label="Required Field"
-                    control={
-                      <Switch
-                        name={`data.fields[${i}].validation.required`}
-                        checked={values.data.fields[i].validation.required}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                    }
-                  />
-                </FormControl>
+              <Stack spacing={1}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  {values.data.fields[i].validation.required}
+                  <FormControl fullWidth>
+                    <FormControlLabel
+                      label="Required Field"
+                      control={
+                        <Switch
+                          name={`data.fields[${i}].validation.required`}
+                          checked={values.data.fields[i].validation.required}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      }
+                    />
+                  </FormControl>
 
-                <FormControl fullWidth>
-                  <TextField
-                    multiline
-                    size="small"
-                    label="Regex"
-                    name={`data.fields[${i}].validation.regex`}
-                    value={values.data.fields[i].validation.regex}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </FormControl>
+                  <FormControl fullWidth>
+                    <TextField
+                      multiline
+                      size="small"
+                      label="Regex"
+                      name={`data.fields[${i}].validation.regex`}
+                      value={values.data.fields[i].validation.regex}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </FormControl>
+                </Stack>
               </Stack>
+
+              {props.formik.values.data.fields[i].type == "number" && (
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      label="Minimum"
+                      type="number"
+                      name={`data.fields[${i}].validation.min`}
+                      value={values.data.fields[i].validation.min}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </FormControl>
+
+                  <FormControl fullWidth>
+                    <TextField
+                      size="small"
+                      label="Maximum"
+                      type="number"
+                      name={`data.fields[${i}].validation.max`}
+                      value={values.data.fields[i].validation.max}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </FormControl>
+                </Stack>
+              )}
             </Stack>
-
-            {props.formik.values.data.fields[i].type == "number" && (
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                spacing={1}
-              >
-                <FormControl fullWidth>
-                  <TextField
-                    size="small"
-                    label="Minimum"
-                    type="number"
-                    name={`data.fields[${i}].validation.min`}
-                    value={values.data.fields[i].validation.min}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </FormControl>
-
-                <FormControl fullWidth>
-                  <TextField
-                    size="small"
-                    label="Maximum"
-                    type="number"
-                    name={`data.fields[${i}].validation.max`}
-                    value={values.data.fields[i].validation.max}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </FormControl>
-              </Stack>
-            )}
           </AccordionDetails>
         </Accordion>
       </Card>
