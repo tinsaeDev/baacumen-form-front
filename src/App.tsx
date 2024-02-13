@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import {
+  Container,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import ResponsiveAppBar from "./components/Appbar";
+import { Outlet } from "react-router-dom";
+import { RootState } from "./store/root";
+import { useSelector } from "react-redux";
+import { Theme } from "@emotion/react";
+import React from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const colorMode =
+    useSelector((state: RootState) => state.app.colorMode) || "light";
+
+  function getTheme(colorMode: "dark" | "light") {
+    return {
+      dark: {
+        typography: {
+          fontFamily: "Google Sans,Roboto, sans-serif",
+          fontSize: 10,
+        },
+        palette: {
+          type: "dark",
+
+          mode: colorMode,
+          ochre: {
+            dark: "#121212",
+            main: "#000",
+            light: "#121212",
+            // dark: will be calculated from palette.secondary.main,
+            contrastText: "#525252",
+          },
+          notificationBg: "#072d3f",
+        },
+      },
+      light: {
+        typography: {
+          fontFamily: "Google Sans,Roboto, sans-serif",
+          fontSize: 10,
+        },
+        palette: {
+          type: "light",
+          mode: colorMode,
+          background: { default: "#f0f0f0" },
+          ochre: {
+            dark: "#f7f7f7",
+            main: "#fff",
+            light: "#f7f7f7",
+            // dark: will be calculated from palette.secondary.main,
+            contrastText: "#dfdfdf",
+          },
+          notificationBg: "#c8eeff",
+        },
+      },
+    }[colorMode];
+  }
+  const theme: Theme = React.useMemo(
+    () => createTheme(getTheme(colorMode)),
+    [colorMode]
+  );
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Container>
+          <ResponsiveAppBar></ResponsiveAppBar>
+          <Outlet />
+        </Container>
+      </ThemeProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
