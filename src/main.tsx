@@ -8,8 +8,7 @@ import { store } from "./store/root";
 import { Provider } from "react-redux";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home.tsx";
-import Home2 from "./pages/Home2.tsx";
+import Forms from "./pages/Forms.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,12 +16,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/2",
-        element: <Home2 />,
+        path: "/forms",
+        element: <Forms />,
       },
     ],
   },

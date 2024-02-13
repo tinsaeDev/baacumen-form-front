@@ -10,8 +10,8 @@ export const menusItems: MenuItem[] = [
   },
   {
     icon: <HomeIcon />,
-    title: "Home",
-    url: "/",
+    title: "Forms",
+    url: "/forms",
     items: [],
   },
   {
