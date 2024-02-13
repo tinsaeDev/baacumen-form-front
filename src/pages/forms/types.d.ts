@@ -12,6 +12,7 @@ type FormObject = {
 
 type FormField = {
   type: "text" | "number" | "textarea" | "checkbox" | "radio" | "date";
+  title: string;
   name: string;
   options?: {
     label: string;
