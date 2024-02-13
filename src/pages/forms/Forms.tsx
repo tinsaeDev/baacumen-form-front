@@ -12,10 +12,11 @@ import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { Link } from "react-router-dom";
 
 export default function Forms() {
-  const mockForms: Form[] = [
+  const mockForms: FormObject[] = [
     {
       id: 1,
       name: "Form 1",
+      description: "Form sesc",
       data: {
         action: "https://google.com/dd3",
         fields: [
@@ -48,7 +49,7 @@ export default function Forms() {
                     {mf.name}
                   </Typography>
 
-                  <Typography variant="subtitle2">{mf.created_at}</Typography>
+                  <Typography variant="subtitle2">{mf.description}</Typography>
                 </CardContent>
                 <CardActions>
                   <IconButton color="primary">
