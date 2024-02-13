@@ -1,6 +1,5 @@
 import { Delete, Edit, NewReleases } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -10,42 +9,22 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import MUIDataTable from "mui-datatables";
+import { Link } from "react-router-dom";
 
 export default function Forms() {
-  const mockForms = [
+  const mockForms: Form[] = [
     {
       id: 1,
       name: "Form 1",
-      data: {},
-      created_at: "",
-      updated_at: "",
-    },
-    {
-      id: 1,
-      name: "Form 1",
-      data: {},
-      created_at: "",
-      updated_at: "",
-    },
-    {
-      id: 1,
-      name: "Form 1",
-      data: {},
-      created_at: "",
-      updated_at: "",
-    },
-    {
-      id: 1,
-      name: "Form 1",
-      data: {},
-      created_at: "",
-      updated_at: "",
-    },
-    {
-      id: 1,
-      name: "Form 1",
-      data: {},
+      data: {
+        action: "https://google.com/dd3",
+        fields: [
+          {
+            name: "first_name",
+            type: "text",
+          },
+        ],
+      },
       created_at: "",
       updated_at: "",
     },
@@ -53,10 +32,11 @@ export default function Forms() {
   return (
     <>
       <Stack direction="row" justifyContent="flex-end">
-        <Button startIcon={<NewReleases />} size="large" variant="contained">
-          
-          New Form{" "}
-        </Button>
+        <Link to="/form-editor/1">
+          <Button startIcon={<NewReleases />} size="large" variant="contained">
+            New Form
+          </Button>
+        </Link>
       </Stack>
       <Grid mt={2} container spacing={2}>
         {mockForms.map((mf) => {
@@ -65,16 +45,16 @@ export default function Forms() {
               <Card>
                 <CardContent>
                   <Typography variant="subtitle1" fontWeight="bold">
-                    Title
+                    {mf.name}
                   </Typography>
 
-                  <Typography variant="subtitle2">Title</Typography>
+                  <Typography variant="subtitle2">{mf.created_at}</Typography>
                 </CardContent>
                 <CardActions>
-                  <IconButton>
+                  <IconButton color="primary">
                     <Edit></Edit>
                   </IconButton>
-                  <IconButton>
+                  <IconButton color="error">
                     <Delete />
                   </IconButton>
                 </CardActions>

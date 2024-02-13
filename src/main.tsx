@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Forms from "./pages/forms/Forms.tsx";
+import FormEditor from "./pages/forms/FormEditor.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/forms",
         element: <Forms />,
+      },
+      {
+        path: "/form-editor/:id",
+        element: <FormEditor />,
       },
     ],
   },
