@@ -1,6 +1,5 @@
 import {
   Add,
-  CheckBox,
   CheckBoxOutlineBlank,
   CopyAll,
   Delete,
@@ -18,13 +17,10 @@ import {
   Divider,
   Fab,
   FormControl,
-  FormControlLabel,
   FormLabel,
   IconButton,
   InputAdornment,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   Stack,
   Switch,
@@ -117,7 +113,25 @@ export default function FormEditor() {
                       />
 
                       {values.data.fields.map((_f, i) => {
-                        return <FormField formik={formik} i={i} />;
+                        return (
+                          <FormField
+                            formik={formik}
+                            i={i}
+                            onNew={() => {
+                              values.data.fields.splice(i + 1, 0, {
+                                name: "",
+                                title: "",
+                                type: "text",
+                                options: [],
+                              });
+
+                              formik.setFieldValue(
+                                "data.fields",
+                                values.data.fields
+                              );
+                            }}
+                          />
+                        );
                       })}
                     </Stack>
                   </Stack>
@@ -131,9 +145,13 @@ export default function FormEditor() {
   );
 }
 
-function FormField(props: { formik: FormikProps<FormObject>; i: number }) {
-  const { formik, i } = props;
-  const { values, errors, touched, handleBlur, handleChange } = formik;
+function FormField(props: {
+  formik: FormikProps<FormObject>;
+  i: number;
+  onNew: () => void;
+}) {
+  const { formik, i, onNew } = props;
+  const { values, handleBlur, handleChange } = formik;
 
   function FieldType() {
     return (
@@ -157,8 +175,6 @@ function FormField(props: { formik: FormikProps<FormObject>; i: number }) {
   const type = values.data.fields[i].type;
   const title = values.data.fields[i].title;
   const name = values.data.fields[i].name;
-
-  console.log(values.data.fields[i]);
   return (
     <div
       style={{
@@ -242,41 +258,43 @@ function FormField(props: { formik: FormikProps<FormObject>; i: number }) {
                     <Stack spacing={2}>
                       {values.data.fields[i].options?.map((op, oi) => {
                         return (
-                          <TextField
-                            size="small"
-                            value={op.label}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            name={`data.fields[${i}].options[${oi}].label`}
-                            variant="standard"
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <RadioButtonUnchecked />
-                                </InputAdornment>
-                              ),
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    color="warning"
-                                    onClick={() => {
-                                      values.data.fields[i].options?.splice(
-                                        oi,
-                                        1
-                                      );
+                          <FormControl>
+                            <TextField
+                              size="small"
+                              value={op.label}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              name={`data.fields[${i}].options[${oi}].label`}
+                              variant="standard"
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <RadioButtonUnchecked />
+                                  </InputAdornment>
+                                ),
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <IconButton
+                                      color="warning"
+                                      onClick={() => {
+                                        values.data.fields[i].options?.splice(
+                                          oi,
+                                          1
+                                        );
 
-                                      formik.setFieldValue(
-                                        `values.data`,
-                                        values.data
-                                      );
-                                    }}
-                                  >
-                                    <Remove />
-                                  </IconButton>
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
+                                        formik.setFieldValue(
+                                          `values.data`,
+                                          values.data
+                                        );
+                                      }}
+                                    >
+                                      <Remove />
+                                    </IconButton>
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </FormControl>
                         );
                       })}
                     </Stack>
@@ -388,7 +406,7 @@ function FormField(props: { formik: FormikProps<FormObject>; i: number }) {
           right: "-2rem",
         }}
       >
-        <Fab size="small" color="info">
+        <Fab size="small" color="info" onClick={onNew}>
           <IconButton>
             <Add />
           </IconButton>
