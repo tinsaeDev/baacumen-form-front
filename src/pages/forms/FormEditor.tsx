@@ -28,6 +28,9 @@ export default function FormEditor() {
           title: "What is your full name",
           name: "full_name",
           type: "text",
+          validation: {
+            required: false,
+          },
           options: [],
         },
       ],
@@ -52,6 +55,10 @@ export default function FormEditor() {
                 name: "",
                 title: "",
                 type: "text",
+                validation: {
+                  regex: "",
+                  required: false,
+                },
                 options: [],
               });
 

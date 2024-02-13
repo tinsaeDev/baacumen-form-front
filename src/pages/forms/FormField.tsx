@@ -1,5 +1,6 @@
 import {
   AddBox,
+  ArrowDownward,
   CheckBoxOutlineBlank,
   CopyAll,
   Delete,
@@ -7,12 +8,15 @@ import {
   Remove,
 } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Button,
   Card,
   CardActions,
   CardContent,
-  Divider,
   FormControl,
+  FormControlLabel,
   FormLabel,
   IconButton,
   InputAdornment,
@@ -21,6 +25,7 @@ import {
   Stack,
   Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import { FormikProps } from "formik";
@@ -269,19 +274,93 @@ export default function FormField(props: {
 
         <CardActions>
           <Stack flexGrow={1} direction="row" justifyContent="flex-end">
-            <IconButton onClick={props.onCopy}>
+            <IconButton size="small" onClick={props.onCopy}>
               <CopyAll />
             </IconButton>
-            <IconButton onClick={props.onDelete}>
+            <IconButton size="small" onClick={props.onDelete}>
               <Delete />
             </IconButton>
-            <IconButton onClick={props.onNew}>
+            <IconButton size="small" onClick={props.onNew}>
               <AddBox />
             </IconButton>
-            <Divider orientation="vertical" />
-            <Switch />
           </Stack>
         </CardActions>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ArrowDownward />}>
+            <Typography>Validations</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack spacing={1}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={1}
+              >
+                {values.data.fields[i].validation.required}
+                <FormControl fullWidth>
+                  <FormControlLabel
+                    label="Required Field"
+                    control={
+                      <Switch
+                        name={`data.fields[${i}].validation.required`}
+                        checked={values.data.fields[i].validation.required}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    }
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <TextField
+                    multiline
+                    size="small"
+                    label="Regex"
+                    name={`data.fields[${i}].validation.regex`}
+                    value={values.data.fields[i].validation.regex}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FormControl>
+              </Stack>
+            </Stack>
+
+            {props.formik.values.data.fields[i].type == "number" && (
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={1}
+              >
+                <FormControl fullWidth>
+                  <TextField
+                    size="small"
+                    label="Minimum"
+                    type="number"
+                    name={`data.fields[${i}].validation.min`}
+                    value={values.data.fields[i].validation.min}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FormControl>
+
+                <FormControl fullWidth>
+                  <TextField
+                    size="small"
+                    label="Maximum"
+                    type="number"
+                    name={`data.fields[${i}].validation.max`}
+                    value={values.data.fields[i].validation.max}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                </FormControl>
+              </Stack>
+            )}
+          </AccordionDetails>
+        </Accordion>
       </Card>
     </div>
   );

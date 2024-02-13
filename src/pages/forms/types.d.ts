@@ -14,6 +14,13 @@ type FormField = {
   type: "text" | "number" | "textarea" | "checkbox" | "radio" | "date";
   title: string;
   name: string;
+
+  validation: {
+    min?: number;
+    max?: number;
+    required: boolean;
+    regex?: string;
+  };
   options?: {
     label: string;
     value: string;
