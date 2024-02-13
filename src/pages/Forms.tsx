@@ -1,5 +1,10 @@
-import { Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import MUIDataTable from "mui-datatables";
 
 export default function Forms() {
-  return <Typography variant="h2"> Forms </Typography>;
+  return (
+    <Box>
+      <MUIDataTable columns={[]} data={[]} title="fORMS" options={{}} />
+    </Box>
+  );
 }

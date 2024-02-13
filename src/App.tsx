@@ -1,4 +1,3 @@
-import "./App.css";
 import {
   Container,
   CssBaseline,
@@ -67,7 +66,9 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container>
+        <Container maxWidth={"xl"} sx={{
+          mt:"4rem"
+        }}>
           <ResponsiveAppBar></ResponsiveAppBar>
           <Outlet />
         </Container>

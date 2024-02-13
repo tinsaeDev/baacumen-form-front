@@ -1,5 +1,6 @@
 import { MenuItem } from "./components/MenuDrawler";
 import HomeIcon from "@mui/icons-material/Home";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 
 export const menusItems: MenuItem[] = [
   {
@@ -9,15 +10,9 @@ export const menusItems: MenuItem[] = [
     items: [],
   },
   {
-    icon: <HomeIcon />,
+    icon: <FormatAlignJustifyIcon />,
     title: "Forms",
     url: "/forms",
-    items: [],
-  },
-  {
-    icon: <HomeIcon />,
-    title: "Home",
-    url: "/",
     items: [],
   },
 ];
