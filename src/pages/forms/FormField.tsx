@@ -1,9 +1,8 @@
 import {
-  
+  AddBox,
   CheckBoxOutlineBlank,
   CopyAll,
   Delete,
-  InsertChart,
   RadioButtonUnchecked,
   Remove,
 } from "@mui/icons-material";
@@ -13,7 +12,6 @@ import {
   CardActions,
   CardContent,
   Divider,
-  
   FormControl,
   FormLabel,
   IconButton,
@@ -278,7 +276,7 @@ export default function FormField(props: {
               <Delete />
             </IconButton>
             <IconButton onClick={props.onNew}>
-              <InsertChart />
+              <AddBox />
             </IconButton>
             <Divider orientation="vertical" />
             <Switch />
