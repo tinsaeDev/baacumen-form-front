@@ -7,7 +7,7 @@ import { store } from "./store/root";
 import { Provider } from "react-redux";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Forms from "./pages/Forms.tsx";
+import Forms from "./pages/forms/Forms.tsx";
 
 const router = createBrowserRouter([
   {
