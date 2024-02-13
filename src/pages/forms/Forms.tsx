@@ -24,6 +24,9 @@ export default function Forms() {
             name: "",
             type: "text",
             title: "",
+            validation: {
+              required: false,
+            },
           },
         ],
       },
