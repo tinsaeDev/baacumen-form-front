@@ -1,9 +1,7 @@
-import {
-  Container,
-  CssBaseline,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
+import { Container, CssBaseline, createTheme } from "@mui/material";
+
+import { ThemeProvider } from "@mui/material/styles";
+
 import ResponsiveAppBar from "./components/Appbar";
 import { Outlet } from "react-router-dom";
 import { RootState } from "./store/root";
