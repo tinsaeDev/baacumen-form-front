@@ -62,7 +62,7 @@ export default function FormEditor() {
                   }),
                   options: yup.array().of(
                     yup.object().shape({
-                      label: yup.string(),
+                      label: yup.string().required("Please enter option label"),
                     })
                   ),
                 })

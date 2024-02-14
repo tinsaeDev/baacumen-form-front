@@ -17,6 +17,7 @@ import {
   CardContent,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   IconButton,
   InputAdornment,
@@ -28,7 +29,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { FormikProps } from "formik";
+import { FormikProps, getIn } from "formik";
 
 export default function FormField(props: {
   formik: FormikProps<FormObject>;
@@ -38,7 +39,7 @@ export default function FormField(props: {
   onDelete: () => void;
 }) {
   const { formik, i } = props;
-  const { values, handleBlur, handleChange } = formik;
+  const { values, errors, handleBlur, handleChange } = formik;
 
   function FieldType() {
     return (
@@ -89,10 +90,12 @@ export default function FormField(props: {
                     minWidth: "200PX",
                   }}
                 />
+                <FormHelperText error>
+                  {getIn(errors.data, `fields[${i}].title`)}
+                </FormHelperText>
               </FormControl>
 
               <FormControl fullWidth size="small">
-                {/* <FormLabel> Field Type </FormLabel> */}
                 <FieldType />
               </FormControl>
             </Stack>
@@ -174,6 +177,12 @@ export default function FormField(props: {
                                 ),
                               }}
                             />
+                            <FormHelperText error>
+                              {getIn(
+                                errors.data,
+                                `fields[${i}].options[${oi}].label`
+                              )}
+                            </FormHelperText>
                           </FormControl>
                         );
                       })}
@@ -315,6 +324,11 @@ export default function FormField(props: {
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
+
+                    {values.data.fields[0].validation.regex}
+                    <FormHelperText error>
+                      {getIn(errors.data, `fields[${i}].validation.regex`)}
+                    </FormHelperText>
                   </FormControl>
                 </Stack>
               </Stack>
