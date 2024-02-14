@@ -56,24 +56,26 @@ export default function FormResponse() {
     [data]
   );
 
-  const initialValues = useMemo(
-    function () {
-      if (!instance) return;
+  const initialValues: { [key: string]: string | string[] } | undefined =
+    useMemo(
+      function () {
+        if (!instance) return;
 
-      const result = {};
-      instance.form.fields.forEach((fld) => {
-        if (fld.type == "checkbox") {
-          result[`${fld.id}`] = {};
-        } else {
-          result[fld.id] = "";
-        }
-      });
+        const result: { [key: string]: string | string[] } = {};
+        instance.form.fields.forEach((fld) => {
+          if (!fld.id) return;
+          if (fld.type == "checkbox") {
+            result[`${fld.id} `] = [];
+          } else {
+            result[`${fld.id} `] = "";
+          }
+        });
 
-      return result;
-    },
+        return result;
+      },
 
-    [instance]
-  );
+      [instance]
+    );
 
   const [showThankYou, setShowThankYou] = useState(false);
   return (
@@ -90,7 +92,7 @@ export default function FormResponse() {
         <Formik
           initialValues={initialValues}
           onSubmit={async (values) => {
-            const { data } = await axios.post(
+            await axios.post(
               `${
                 import.meta.env.VITE_APP_BACKEND_URL
               }/form_response/${instanceId}`,
@@ -134,7 +136,6 @@ export default function FormResponse() {
                               value={values[`${fld.id}`]}
                               label={fld.title}
                               type={fld.type}
-                              required={fld.validation.regex}
                             />
                           </FormControl>
                         );
@@ -184,7 +185,7 @@ export default function FormResponse() {
                                       name={`${fld.id}`}
                                       control={<Switch />}
                                       onChange={handleChange}
-                                      checked={values[fld.id][opt.label]}
+                                      checked={values[`${fld.id}`][opt.label]}
                                       label={opt.label}
                                     />
                                   );
