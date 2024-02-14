@@ -185,7 +185,6 @@ export default function FormResponse() {
                                       name={`${fld.id}`}
                                       control={<Switch />}
                                       onChange={handleChange}
-                                      checked={values[`${fld.id}`][opt.label]}
                                       label={opt.label}
                                     />
                                   );
