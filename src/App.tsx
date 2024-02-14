@@ -10,6 +10,8 @@ import { RootState } from "./store/root";
 import { useSelector } from "react-redux";
 import { Theme } from "@emotion/react";
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./components/reactQuery";
 
 function App() {
   const colorMode =
@@ -64,15 +66,20 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Container maxWidth={"xl"} sx={{
-          mt:"4rem"
-        }}>
-          <ResponsiveAppBar></ResponsiveAppBar>
-          <Outlet />
-        </Container>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Container
+            maxWidth={"xl"}
+            sx={{
+              mt: "4rem",
+            }}
+          >
+            <ResponsiveAppBar></ResponsiveAppBar>
+            <Outlet />
+          </Container>
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 }
