@@ -2,10 +2,8 @@ type FormObject = {
   id: number;
   name: string;
   description: string;
-  data: {
-    fields: FormField[];
-    action: string;
-  };
+  fields: FormField[];
+
   created_at: string;
   updated_at: string;
 };
