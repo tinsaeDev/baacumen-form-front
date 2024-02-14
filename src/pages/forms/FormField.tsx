@@ -30,9 +30,10 @@ import {
 } from "@mui/material";
 
 import { FormikProps, getIn } from "formik";
+import { FormRequest } from "./FormEditor";
 
 export default function FormField(props: {
-  formik: FormikProps<FormObject>;
+  formik: FormikProps<FormRequest>;
   i: number;
   onNew: () => void;
   onCopy: () => void;
@@ -46,8 +47,8 @@ export default function FormField(props: {
       <Select
         fullWidth
         label="Field Type"
-        value={values.data.fields[i].type}
-        name={`data.fields[${i}].type`}
+        value={values.fields[i].type}
+        name={`fields[${i}].type`}
         onChange={handleChange}
         onBlur={handleBlur}
       >
@@ -60,8 +61,8 @@ export default function FormField(props: {
       </Select>
     );
   }
-  const type = values.data.fields[i].type;
-  const title = values.data.fields[i].title;
+  const type = values.fields[i].type;
+  const title = values.fields[i].title;
 
   return (
     <div
@@ -83,7 +84,7 @@ export default function FormField(props: {
                   size="small"
                   label="Question"
                   value={title}
-                  name={`data.fields[${i}].title`}
+                  name={`fields[${i}].title`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   sx={{
@@ -91,7 +92,7 @@ export default function FormField(props: {
                   }}
                 />
                 <FormHelperText error>
-                  {getIn(errors.data, `fields[${i}].title`)}
+                  {getIn(errors, `fields[${i}].title`)}
                 </FormHelperText>
               </FormControl>
 
@@ -139,15 +140,15 @@ export default function FormField(props: {
                   </FormLabel>
                   <Stack mt={2} spacing={2}>
                     <Stack spacing={2}>
-                      {values.data.fields[i].options?.map((op, oi) => {
+                      {values.fields[i].options?.map((op, oi) => {
                         return (
-                          <FormControl>
+                          <FormControl key={oi}>
                             <TextField
                               size="small"
                               value={op.label}
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              name={`data.fields[${i}].options[${oi}].label`}
+                              name={`fields[${i}].options[${oi}].label`}
                               variant="standard"
                               InputProps={{
                                 startAdornment: (
@@ -160,14 +161,11 @@ export default function FormField(props: {
                                     <IconButton
                                       color="warning"
                                       onClick={() => {
-                                        values.data.fields[i].options?.splice(
-                                          oi,
-                                          1
-                                        );
+                                        values.fields[i].options?.splice(oi, 1);
 
                                         formik.setFieldValue(
-                                          `values.data`,
-                                          values.data
+                                          `values.fields`,
+                                          values.fields
                                         );
                                       }}
                                     >
@@ -179,7 +177,7 @@ export default function FormField(props: {
                             />
                             <FormHelperText error>
                               {getIn(
-                                errors.data,
+                                errors,
                                 `fields[${i}].options[${oi}].label`
                               )}
                             </FormHelperText>
@@ -191,11 +189,11 @@ export default function FormField(props: {
                     <Button
                       size="small"
                       onClick={() => {
-                        values.data.fields[i].options?.push({
+                        values.fields[i].options?.push({
                           label: "Option",
                         });
 
-                        formik.setFieldValue(`values.data`, values.data);
+                        formik.setFieldValue(`values.fields`, values.fields);
                       }}
                     >
                       Add Option
@@ -212,14 +210,15 @@ export default function FormField(props: {
                   </FormLabel>
                   <Stack mt={2} spacing={2}>
                     <Stack spacing={2}>
-                      {values.data.fields[i].options?.map((op, oi) => {
+                      {values.fields[i].options?.map((op, oi) => {
                         return (
                           <TextField
+                            key={oi}
                             size="small"
                             value={op.label}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            name={`data.fields[${i}].options[${oi}].label`}
+                            name={`fields[${i}].options[${oi}].label`}
                             variant="standard"
                             InputProps={{
                               startAdornment: (
@@ -232,14 +231,11 @@ export default function FormField(props: {
                                   <IconButton
                                     color="warning"
                                     onClick={() => {
-                                      values.data.fields[i].options?.splice(
-                                        oi,
-                                        1
-                                      );
+                                      values.fields[i].options?.splice(oi, 1);
 
                                       formik.setFieldValue(
-                                        `values.data`,
-                                        values.data
+                                        `values.fields`,
+                                        values.fields
                                       );
                                     }}
                                   >
@@ -256,11 +252,11 @@ export default function FormField(props: {
                     <Button
                       size="small"
                       onClick={() => {
-                        values.data.fields[i].options?.push({
+                        values.fields[i].options?.push({
                           label: "Option",
                         });
 
-                        formik.setFieldValue(`values.data`, values.data);
+                        formik.setFieldValue(`values.fields`, values.fields);
                       }}
                     >
                       Add Option
@@ -299,14 +295,14 @@ export default function FormField(props: {
                   alignItems="center"
                   spacing={1}
                 >
-                  {values.data.fields[i].validation.required}
+                  {values.fields[i].validation.required_field}
                   <FormControl fullWidth>
                     <FormControlLabel
                       label="Required Field"
                       control={
                         <Switch
-                          name={`data.fields[${i}].validation.required`}
-                          checked={values.data.fields[i].validation.required}
+                          name={`fields[${i}].validation.required_field`}
+                          checked={values.fields[i].validation.required_field}
                           onChange={handleChange}
                           onBlur={handleBlur}
                         />
@@ -319,21 +315,21 @@ export default function FormField(props: {
                       multiline
                       size="small"
                       label="Regex"
-                      name={`data.fields[${i}].validation.regex`}
-                      value={values.data.fields[i].validation.regex}
+                      name={`fields[${i}].validation.regex`}
+                      value={values.fields[i].validation.regex}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
 
-                    {values.data.fields[0].validation.regex}
+                    {values.fields[0].validation.regex}
                     <FormHelperText error>
-                      {getIn(errors.data, `fields[${i}].validation.regex`)}
+                      {getIn(errors, `fields[${i}].validation.regex`)}
                     </FormHelperText>
                   </FormControl>
                 </Stack>
               </Stack>
 
-              {props.formik.values.data.fields[i].type == "number" && (
+              {props.formik.values.fields[i].type == "number" && (
                 <Stack
                   direction="row"
                   justifyContent="space-between"
@@ -345,8 +341,8 @@ export default function FormField(props: {
                       size="small"
                       label="Minimum"
                       type="number"
-                      name={`data.fields[${i}].validation.min`}
-                      value={values.data.fields[i].validation.min}
+                      name={`fields[${i}].validation.min`}
+                      value={values.fields[i].validation.min}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
@@ -357,8 +353,8 @@ export default function FormField(props: {
                       size="small"
                       label="Maximum"
                       type="number"
-                      name={`data.fields[${i}].validation.max`}
-                      value={values.data.fields[i].validation.max}
+                      name={`fields[${i}].validation.max`}
+                      value={values.fields[i].validation.max}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />

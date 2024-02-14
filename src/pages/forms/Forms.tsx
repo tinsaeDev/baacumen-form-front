@@ -75,7 +75,7 @@ export default function Forms() {
         <Grid mt={2} container spacing={2}>
           {forms.map((mf) => {
             return (
-              <Grid xs={12} sm={6} lg={4} xl={3}>
+              <Grid key={mf.id} xs={12} sm={6} lg={4} xl={3}>
                 <Card>
                   <CardContent>
                     <Typography variant="subtitle1" fontWeight="bold">

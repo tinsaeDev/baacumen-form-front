@@ -9,13 +9,14 @@ type FormObject = {
 };
 
 type FormField = {
+  id?: number;
   type: "text" | "number" | "textarea" | "checkbox" | "radio" | "date";
   title: string;
 
   validation: {
     min?: number;
     max?: number;
-    required: boolean;
+    required_field: boolean;
     regex?: string;
   };
   options?: {

@@ -1,4 +1,10 @@
-import { Add, Preview, Save } from "@mui/icons-material";
+import {
+  Add,
+  Check,
+  HourglassBottom,
+  Preview,
+  Save,
+} from "@mui/icons-material";
 import {
   Box,
   Container,
@@ -13,13 +19,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikProps } from "formik";
 import * as yup from "yup";
 import FormField from "./FormField";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import { green } from "@mui/material/colors";
+import SnackbarAlert, { SnackbarMessage } from "../../components/SnackbarAlert";
 
+export type FormRequest = FormObject & {
+  deleted_fields: number[];
+};
 export default function FormEditor() {
   const { id } = useParams();
   const { isLoading, isError, data } = useQuery({
@@ -34,21 +45,89 @@ export default function FormEditor() {
     },
   }) as UseQueryResult;
 
-  const form: FormObject | null = useMemo(
+  const form: FormRequest | null = useMemo(
     function () {
       if (!data) {
         return null;
       }
 
-      return (
+      const form = (
         data as {
           data: {
             form: FormObject;
           };
         }
       ).data.form;
+
+      return {
+        ...form,
+        deleted_fields: [],
+      };
     },
     [data]
+  );
+
+  const [savingOrderForm, setSavingOrderForm] = useState(false);
+  const [showSuccessfulySaved, setShowSuccessfulySaved] = useState(false);
+
+  // Snackbar
+  const snackbarMessage = useRef<SnackbarMessage>();
+  const [showSnackbarAlert, setShowSnackbarAlert] = useState<boolean>(false);
+
+  const saveButtonSx = {
+    ...(showSuccessfulySaved && {
+      bgcolor: green[500],
+      "&:hover": {
+        bgcolor: green[700],
+      },
+    }),
+  };
+
+  useEffect(
+    function () {
+      if (!showSuccessfulySaved) {
+        return;
+      }
+
+      setTimeout(function () {
+        setShowSuccessfulySaved(false);
+      }, 1500);
+    },
+    [showSuccessfulySaved, setShowSuccessfulySaved]
+  );
+
+  const saveProgress = useCallback(
+    async (formik: FormikProps<FormRequest>) => {
+      if (!form) {
+        return;
+      }
+      const { values } = formik;
+      setSavingOrderForm(true);
+      setShowSuccessfulySaved(false);
+      return axios
+        .put(`${import.meta.env.VITE_APP_BACKEND_URL}/forms/${form.id}`, {
+          action: "SAVE",
+          ...values,
+        })
+        .then((result: AxiosResponse) => {
+          const form = result.data.data.form;
+
+          formik.setValues({ ...form, deleted_fields: [] });
+
+          setShowSuccessfulySaved(true);
+        })
+        .catch(() => {
+          snackbarMessage.current = {
+            message: "Faild save!",
+            success: false,
+          };
+          setShowSnackbarAlert(true);
+        })
+        .finally(() => {
+          setSavingOrderForm(false);
+        });
+    },
+    [form]
   );
 
   return (
@@ -97,7 +176,7 @@ export default function FormEditor() {
           {function (formik) {
             const { values, errors, touched, handleBlur, handleChange } =
               formik;
-            console.log(formik.errors);
+
             function onNewField(i: number) {
               {
                 values.fields.splice(i + 1, 0, {
@@ -105,7 +184,7 @@ export default function FormEditor() {
                   type: "text",
                   validation: {
                     regex: "",
-                    required: false,
+                    required_field: false,
                   },
                   options: [],
                 });
@@ -127,9 +206,27 @@ export default function FormEditor() {
                         <IconButton>
                           <Preview />
                         </IconButton>
-                        <IconButton type="submit">
-                          <Save />
-                        </IconButton>
+
+                        <Box sx={{ m: 1, position: "relative" }}>
+                          <IconButton
+                            disabled={savingOrderForm}
+                            size="small"
+                            aria-label="save"
+                            color="primary"
+                            sx={saveButtonSx}
+                            onClick={() => {
+                              saveProgress(formik);
+                            }}
+                          >
+                            {showSuccessfulySaved ? (
+                              <Check />
+                            ) : savingOrderForm ? (
+                              <HourglassBottom />
+                            ) : (
+                              <Save />
+                            )}
+                          </IconButton>
+                        </Box>
                       </Stack>
                     </Toolbar>
                     <Stack spacing={2} sx={{}}>
@@ -178,12 +275,20 @@ export default function FormEditor() {
                         {values.fields.map((f, i) => {
                           return (
                             <FormField
+                              key={i}
                               formik={formik}
                               i={i}
                               onNew={() => {
                                 onNewField(i);
                               }}
                               onDelete={() => {
+                                if (f.id) {
+                                  values.deleted_fields.push(f.id);
+                                  formik.setFieldValue(
+                                    "data.deleted_fields",
+                                    values.deleted_fields
+                                  );
+                                }
                                 values.fields.splice(i, 1);
                                 formik.setFieldValue(
                                   "data.fields",
@@ -226,6 +331,16 @@ export default function FormEditor() {
             );
           }}
         </Formik>
+      )}
+
+      {showSnackbarAlert && snackbarMessage.current && (
+        <SnackbarAlert
+          onClose={() => {
+            setShowSnackbarAlert(false);
+          }}
+          message={snackbarMessage.current}
+          open={true}
+        />
       )}
     </>
   );
