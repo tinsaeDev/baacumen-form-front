@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Form, Formik, FormikProps } from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
 import FormField from "./FormField";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -97,37 +97,18 @@ export default function FormEditor() {
   );
 
   const saveProgress = useCallback(
-    async (formik: FormikProps<FormRequest>) => {
-      if (!form) {
-        return;
-      }
-      const { values } = formik;
+    async (values: FormRequest): Promise<AxiosResponse> => {
       setSavingOrderForm(true);
       setShowSuccessfulySaved(false);
-      return axios
-        .put(`${import.meta.env.VITE_APP_BACKEND_URL}/forms/${form.id}`, {
+      return axios.put(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/forms/${values.id}`,
+        {
           action: "SAVE",
           ...values,
-        })
-        .then((result: AxiosResponse) => {
-          const form = result.data.data.form;
-
-          formik.setValues({ ...form, deleted_fields: [] });
-
-          setShowSuccessfulySaved(true);
-        })
-        .catch(() => {
-          snackbarMessage.current = {
-            message: "Faild save!",
-            success: false,
-          };
-          setShowSnackbarAlert(true);
-        })
-        .finally(() => {
-          setSavingOrderForm(false);
-        });
+        }
+      );
     },
-    [form]
+    []
   );
 
   return (
@@ -169,13 +150,32 @@ export default function FormEditor() {
                 ),
             }),
           })}
-          onSubmit={(values) => {
-            console.log("VVVVVVVVVVV", values);
+          onSubmit={(values, formik) => {
+            saveProgress(values)
+              .then((result: AxiosResponse) => {
+                const form = result.data.data.form;
+
+                formik.setValues({ ...form, deleted_fields: [] });
+
+                setShowSuccessfulySaved(true);
+              })
+              .catch(() => {
+                snackbarMessage.current = {
+                  message: "Faild save!",
+                  success: false,
+                };
+                setShowSnackbarAlert(true);
+              })
+              .finally(() => {
+                setSavingOrderForm(false);
+              });
           }}
         >
           {function (formik) {
             const { values, errors, touched, handleBlur, handleChange } =
               formik;
+
+            console.log(errors);
 
             function onNewField(i: number) {
               {
@@ -214,9 +214,7 @@ export default function FormEditor() {
                             aria-label="save"
                             color="primary"
                             sx={saveButtonSx}
-                            onClick={() => {
-                              saveProgress(formik);
-                            }}
+                            type="submit"
                           >
                             {showSuccessfulySaved ? (
                               <Check />
