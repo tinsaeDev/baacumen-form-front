@@ -65,9 +65,9 @@ export default function FormResponse() {
         instance.form.fields.forEach((fld) => {
           if (!fld.id) return;
           if (fld.type == "checkbox") {
-            result[`${fld.id} `] = [];
+            result[`${fld.id}`] = [];
           } else {
-            result[`${fld.id} `] = "";
+            result[`${fld.id}`] = "";
           }
         });
 
@@ -92,13 +92,12 @@ export default function FormResponse() {
         <Formik
           initialValues={initialValues}
           onSubmit={async (values) => {
+            
             await axios.post(
               `${
                 import.meta.env.VITE_APP_BACKEND_URL
               }/form_response/${instanceId}`,
-              {
-                ...values,
-              }
+             values
             );
             setShowThankYou(true);
           }}

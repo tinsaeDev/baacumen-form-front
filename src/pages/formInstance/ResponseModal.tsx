@@ -1,6 +1,17 @@
 import { Close } from "@mui/icons-material";
-import { IconButton, Modal, Paper, Stack, Typography } from "@mui/material";
+import {
+  IconButton,
+  LinearProgress,
+  Modal,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import moment from "moment";
 import MUIDataTable, { MUIDataTableColumn } from "mui-datatables";
+import { useMemo } from "react";
 
 export default function ResponseModal(props: {
   onClose: () => void;
@@ -10,13 +21,31 @@ export default function ResponseModal(props: {
     {
       name: "",
       label: "No",
+      options: {
+        customBodyRenderLite(dataIndex) {
+          return dataIndex + 1;
+        },
+      },
     },
   ];
 
   props.formInstance.form.fields.forEach((fld) => {
     columns.push({
-      name: "",
+      name: `${fld.id}`,
       label: fld.title,
+      options: {
+        customBodyRender(_value, tableMeta) {
+          if (!values) return;
+          const row = values[tableMeta.rowIndex];
+          const res = row[`${fld.id}`];
+
+          if (Array.isArray(res)) {
+            return res.join(",");
+          }
+
+          return res || "no val";
+        },
+      },
     });
   });
 
@@ -26,13 +55,56 @@ export default function ResponseModal(props: {
       {
         name: "",
         label: "Created at",
+        options: {
+          customBodyRender(value: string) {
+            return moment(value).calendar();
+          },
+        },
       },
       {
         name: "",
         label: "Updated at",
+        options: {
+          customBodyRender(value: string) {
+            return moment(value).calendar();
+          },
+        },
       },
     ],
   ];
+
+  const { isLoading, isError, data } = useQuery({
+    retry: false,
+    queryKey: ["forms"],
+
+    queryFn: async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/form_response/${
+          props.formInstance.id
+        }`
+      );
+      return response.data;
+    },
+  }) as UseQueryResult;
+
+  const values: InstanceValue["values"][] | null = useMemo(
+    function () {
+      if (!data) {
+        return null;
+      }
+
+      const t: InstanceValue[] = (
+        data as {
+          data: {
+            values: InstanceValue[];
+          };
+        }
+      ).data.values;
+
+      return t.map((r) => r.values);
+    },
+    [data]
+  );
 
   return (
     <Modal
@@ -69,12 +141,19 @@ export default function ResponseModal(props: {
 
           <Stack sx={{}} flexGrow={1} p={2}>
             <Stack>
-              <MUIDataTable
-                title={`Responses - ${props.formInstance.name} - ${props.formInstance.form.name} `}
-                columns={columns}
-                options={{}}
-                data={[]}
-              />
+              {isLoading && <LinearProgress />}
+
+              {isError && (
+                <Typography variant="h4"> Error LOading Responses </Typography>
+              )}
+              {values && (
+                <MUIDataTable
+                  title={`Responses - ${props.formInstance.name} - ${props.formInstance.form.name} `}
+                  columns={columns}
+                  options={{}}
+                  data={values}
+                />
+              )}
             </Stack>
           </Stack>
         </Stack>

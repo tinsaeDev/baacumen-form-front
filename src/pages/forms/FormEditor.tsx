@@ -121,7 +121,7 @@ export default function FormEditor() {
         </Typography>
       )}
 
-      {form && (
+      {!isError && !isLoading && form && (
         <Formik
           initialValues={form}
           validationSchema={yup.object().shape({

@@ -36,3 +36,13 @@ type FormResponse = {
   label: string;
   answer: string;
 };
+
+type InstanceValue = {
+  id: number;
+  running_form_id: number;
+  values: {
+    [key: string]: number | number[] | string | string[];
+  };
+  created_at: string;
+  updated_at: string;
+};
