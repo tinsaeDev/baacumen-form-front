@@ -189,7 +189,7 @@ export default function FormEditor() {
                   options: [],
                 });
 
-                formik.setFieldValue("data.fields", values.fields);
+                formik.setFieldValue("fields", values.fields);
               }
             }
             return (
@@ -283,23 +283,19 @@ export default function FormEditor() {
                                 if (f.id) {
                                   values.deleted_fields.push(f.id);
                                   formik.setFieldValue(
-                                    "data.deleted_fields",
+                                    "deleted_fields",
                                     values.deleted_fields
                                   );
                                 }
                                 values.fields.splice(i, 1);
-                                formik.setFieldValue(
-                                  "data.fields",
-                                  values.fields
-                                );
+                                formik.setFieldValue("fields", values.fields);
                               }}
                               onCopy={() => {
-                                values.fields.splice(i + 1, 0, f);
+                                const clone = structuredClone(f);
+                                delete clone.id;
+                                values.fields.splice(i + 1, 0, clone);
 
-                                formik.setFieldValue(
-                                  "data.fields",
-                                  values.fields
-                                );
+                                formik.setFieldValue("fields", values.fields);
                               }}
                             />
                           );

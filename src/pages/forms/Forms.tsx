@@ -1,4 +1,4 @@
-import { Delete, Edit, NewReleases } from "@mui/icons-material";
+import { Delete, Edit, List, NewReleases } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -87,25 +87,44 @@ export default function Forms() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Link to={`/form-editor/${mf.id}`}>
-                      <IconButton color="primary">
-                        <Edit></Edit>
-                      </IconButton>
-                    </Link>
-
-                    <IconButton
-                      color="error"
-                      onClick={async () => {
-                        await axios.delete(
-                          `${import.meta.env.VITE_APP_BACKEND_URL}/forms/${
-                            mf.id
-                          }`
-                        );
-                        queryClient.invalidateQueries();
-                      }}
+                    <Stack
+                      flexGrow={1}
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
                     >
-                      <Delete />
-                    </IconButton>
+                      <Stack direction="row" alignItems="center">
+                        <Link to={`/form-editor/${mf.id}`}>
+                          <IconButton color="primary">
+                            <Edit></Edit>
+                          </IconButton>
+                        </Link>
+
+                        <IconButton
+                          color="error"
+                          onClick={async () => {
+                            await axios.delete(
+                              `${import.meta.env.VITE_APP_BACKEND_URL}/forms/${
+                                mf.id
+                              }`
+                            );
+                            queryClient.invalidateQueries();
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Stack>
+
+                      <Link to={`/forms/${mf.id}/instances`}>
+                        <Button
+                          color="primary"
+                          startIcon={<List />}
+                          variant="contained"
+                        >
+                          Instances
+                        </Button>
+                      </Link>
+                    </Stack>
                   </CardActions>
                 </Card>
               </Grid>

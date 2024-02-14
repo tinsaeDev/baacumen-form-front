@@ -23,3 +23,16 @@ type FormField = {
     label: string;
   }[];
 };
+
+type FormInstance = {
+  id: number;
+  name: string;
+  form: FormObject;
+  response: FormResponse[];
+};
+
+type FormResponse = {
+  id: number;
+  label: string;
+  answer: string;
+};
